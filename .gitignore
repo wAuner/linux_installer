@@ -4,3 +4,6 @@ cuda/*
 
 deb_packages/*
 !deb_packages/.gitkeep
+
+tmp/*
+!tmp/.gitkeep

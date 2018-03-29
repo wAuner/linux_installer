@@ -10,7 +10,7 @@ sudo apt update -qq
 sudo apt upgrade -yy
 
 
-sudo apt -y install zsh cmake make vim git g++ gcc curl
+sudo apt -y install zsh cmake make vim git g++ gcc curl wget
 
 # tilix terminal
 ##########################################
@@ -24,6 +24,24 @@ then
     sudo apt -qq update; sudo apt -y install tilix }
 else
     echo "tilix will not be installed."
+    echo
+fi
+
+# vs code
+##########################################
+APPNAME="VS CODE"
+read -p "Download and install $APPNAME <Y/y>" -n 1 -r
+echo    
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    FNAME=tmp/vs_code.deb
+    URL=https://go.microsoft.com/fwlink/?LinkID=760868
+    wget -o $FNAME $URL
+    sudo apt install -y ./$FNAME
+    rm $FNAME
+    echo "$APPNAME installed"
+else
+    echo "$APPNAME will not be installed."
     echo
 fi
 
@@ -248,3 +266,17 @@ fi
 echo "#################################"
 echo "#################################"
 echo "Installation script has finished."
+
+
+## 
+###########################################
+# APPNAME=
+# read -p "Install $APPNAME <Y/y>" -n 1 -r
+# echo    
+# if [[ $REPLY =~ ^[Yy]$ ]]
+# then
+    
+# else
+#     echo "$APPNAME will not be installed."
+#     echo
+# fi
