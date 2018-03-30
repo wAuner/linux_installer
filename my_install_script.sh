@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cd ~
-
 # install system tools
 ##########################################
 # update silently
@@ -19,9 +17,9 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     # tilix only available in newer ubuntu versions
-    sudo apt -y install tilix || { echo ; echo "tilix not available, add private repo"; echo ; \
+    sudo apt -y install tilix ||  echo ; echo "tilix not available, add private repo"; echo ; \
     sudo add-apt-repository ppa:webupd8team/terminix; \
-    sudo apt -qq update; sudo apt -y install tilix }
+    sudo apt -qq update; sudo apt -y install tilix 
 else
     echo "tilix will not be installed."
     echo
@@ -36,7 +34,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
     FNAME=tmp/vs_code.deb
     URL=https://go.microsoft.com/fwlink/?LinkID=760868
-    wget -o $FNAME $URL
+    wget -O $FNAME $URL
     sudo apt install -y ./$FNAME
     rm $FNAME
     echo "$APPNAME installed"
@@ -44,6 +42,7 @@ else
     echo "$APPNAME will not be installed."
     echo
 fi
+
 
 # virtualbox prep
 ##########################################
@@ -90,17 +89,18 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     # install oh my zsh
+    # exit the opening zsh shell session to conitnue with installation
     sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
-    #TODO change zshrc to use agnoster theme
+    # do not mix up manual vs plugin install for autosuggestion
     git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
     echo "source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
     # change zsh theme
-    sed -i 's/ZSH_THEME="robbyrussell"q/ZSH_THEME="agnoster"/' ~/.zshrc
+    sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnoster"/' ~/.zshrc
     # install fonts for agnoster theme
     sudo apt -y install fonts-powerline
     # adapt theme so it doesnt show the user
-    echo "DEFAULT_USER=$(whoami)" >> .zshrc
+    echo "DEFAULT_USER=$(whoami)" >> ~/.zshrc
 
     echo "ZSH installed and set up."
     echo
@@ -111,7 +111,7 @@ fi
 
 # install CUDA and cudnn
 ##########################################
-read -p "Install CUDA and cuDNN? <Y/y>" -n 1 -r
+read -p "Install CUDA 9 and cuDNN? <Y/y>" -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
@@ -156,6 +156,7 @@ then
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
         # TODO write separate script to manage env & packages
+        echo
     else
         echo "Anaconda env will not be set up."
     fi
@@ -211,15 +212,13 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     # opens a new shell as sudo with bash
-    sudo -i
-    echo "deb http://repo.sinew.in/ stable main" > \
-    /etc/apt/sources.list.d/enpass.list
+    sudo bash -c 'echo "deb http://repo.sinew.in/ stable main" > \
+    /etc/apt/sources.list.d/enpass.list'
     # import key that is used to sign the release:
-    wget -O - https://dl.sinew.in/keys/enpass-linux.key | apt-key add -
-    apt update -qq
-    apt install enpass
-    # closes that sudo shell
-    exit
+    wget -O - https://dl.sinew.in/keys/enpass-linux.key | sudo apt-key add -
+    sudo apt update -qq
+    sudo apt install enpass
+    echo "Enpass installed."
 else
     echo "Enpass will not be installed."
 fi
@@ -275,7 +274,7 @@ echo "Installation script has finished."
 # echo    
 # if [[ $REPLY =~ ^[Yy]$ ]]
 # then
-    
+#     echo "$APPNAME installed."    
 # else
 #     echo "$APPNAME will not be installed."
 #     echo
